@@ -1,108 +1,66 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React from "react";
+import { Text } from "react-native";
+import { ThemeProvider } from "styled-components/native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { theme } from "./src/infrastructure/theme";
+import { RestaurantsScreen } from "./src/features/restaurants/screens/restaurants.screen";
+import { SafeArea } from "./src/components/utility/safe-area.component";
 
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { restaurantsRequest } from "./src/services/restaurants/restaurants.service"
+import  Icon  from "react-native-vector-icons/FontAwesome5";
+import {RestaurantContextProvider}  from './src/services/restaurants/restaurants.context'
+const Tab = createBottomTabNavigator();
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+const TAB_ICON = {
+  Restaurants: "md-restaurant",
+  Map: "md-map",
+  Settings: "md-settings",
 };
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+const Settings = () => (
+  <SafeArea>
+    <Text>Settings</Text>
+  </SafeArea>
+);
+const Map = () => (
+  <SafeArea>
+    <Text>Map</Text>
+  </SafeArea>
+);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+const createScreenOptions = ({ route }) => {
+  const iconName = TAB_ICON[route.name];
+  return {
+    tabBarIcon: ({ size, color }) => (
+      <Icon name={iconName} size={size} color={color} />
+    ),
   };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <View style={{
-        flex: 1,
-        width: 270,
-        height: 500,
-      }}>
-        <View style={{
-          flex: 1,
-          width: 100,
-          height: 100,
-        }} />
-        <View style={{
-          flex: 1,
-          flexGrow: 1,
-        }} />
-        <View style={{
-          flex: 1,
-          width: 100,
-          height: 100,
-        }} />
-      </View>
-    </SafeAreaView>
-  );
 };
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+export default function App() {
+ 
 
-export default App;
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+      <RestaurantContextProvider>
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={createScreenOptions}
+            tabBarOptions={{
+              activeTintColor: "tomato",
+              inactiveTintColor: "gray",
+            }}
+          >
+            <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
+            <Tab.Screen name="Map" component={Map} />
+            <Tab.Screen name="Settings" component={Settings} />
+          </Tab.Navigator>
+        </NavigationContainer>
+        </RestaurantContextProvider>
+      </ThemeProvider>
+     
+    </>
+  );
+}
