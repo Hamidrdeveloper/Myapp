@@ -19,7 +19,7 @@
     "npm": "^7.7.5",
     "react": "17.0.1",
     "react-dom": "16.13.1",
-    "react-native": "0.64.0",
+    "react-native": "0.64.1",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-google-fonts": "^0.0.0",
     "react-native-paper": "^4.7.2",
